@@ -31,7 +31,6 @@ import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import HistoryToggleOffIcon from '@mui/icons-material/HistoryToggleOff';
 import TimerIcon from '@mui/icons-material/Timer';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 export default function Projekti({ projekti, taskit, id }) {
     const prio_varit = ['', '#d50000', '#ffa000', 'transparent', '#a5d6a7'];
@@ -71,8 +70,8 @@ export default function Projekti({ projekti, taskit, id }) {
 
                                     {status.time_estimate &&
                                         <Tooltip title="Arvioitu työaika yhteensä">
-                                            <Box sx={{ display: 'flex', alignItems: 'center', color: '#666' }}>
-                                                <HistoryToggleOffIcon fontSize="small" sx={{ color: '#666', mr: 0.66 }} /> 
+                                            <Box sx={{ display: 'flex', alignItems: 'center', color: '#777' }}>
+                                                <HistoryToggleOffIcon fontSize="small" sx={{ color: '#777', mr: 0.66 }} /> 
                                                 <Typography sx={{ fontWeight: 700, textTransform: 'none' }}>{msFormatter(status.time_estimate)}</Typography>
                                             </Box>
                                         </Tooltip>
@@ -80,8 +79,8 @@ export default function Projekti({ projekti, taskit, id }) {
 
                                     {status.time_spent &&
                                         <Tooltip title="Toteutunut työaika yhteensä">
-                                            <Box sx={{ display: 'flex', alignItems: 'center', color: '#666' }}>
-                                                <TimerIcon fontSize="small" sx={{ color: '#666', mr: 0.66 }} /> 
+                                            <Box sx={{ display: 'flex', alignItems: 'center', color: '#777' }}>
+                                                <TimerIcon fontSize="small" sx={{ color: '#777', mr: 0.66 }} /> 
                                                 <Typography sx={{ fontWeight: 700, textTransform: 'none' }}>{msFormatter(status.time_spent)}</Typography>
                                             </Box>
                                         </Tooltip>
@@ -93,8 +92,8 @@ export default function Projekti({ projekti, taskit, id }) {
                             
                             <Stack spacing={2}>
                                 {status.tasks.map((task, j) => (
-                                    <Badge badgeContent={ (task.priority && task.priority.id != 3) ? '!' : ' ' } sx={{ "& .MuiBadge-badge": { backgroundColor: task.priority ? prio_varit[task.priority.id] : 'transparent', color: '#FFF', fontWeight: 900 } }}>
-                                        <Card sx={{ width: '100%' }} onClick={() => toggleDescription(task.id)} key={j}>
+                                    <Badge badgeContent={ (task.priority && task.priority.id != 3) ? '!' : ' ' } sx={{ "& .MuiBadge-badge": { backgroundColor: task.priority ? prio_varit[task.priority.id] : 'transparent', color: '#FFF', fontWeight: 900 } }} key={j}>
+                                        <Card sx={{ width: '100%' }} onClick={() => toggleDescription(task.id)}>
                                             <CardActionArea>
                                                 <CardContent>
 
@@ -102,8 +101,11 @@ export default function Projekti({ projekti, taskit, id }) {
 
                                                     
                                                     <Collapse in={expanded === task.id}>
-                                                        <Typography sx={{ fontSize: 16, px: 2}}>
-                                                            {task.description ? task.description : 'Tälle tehtävälle ei ole kirjoitettu kuvausta tai annettu lisätietoja.'}
+                                                        <Typography component="div" sx={{ fontSize: 16, px: 2}}>
+                                                            {task.description 
+                                                                ? <div dangerouslySetInnerHTML={{__html: task.description.replace(/(?:\r\n|\r|\n)/g, '<br>')}} /> 
+                                                                : 'Tälle tehtävälle ei ole kirjoitettu kuvausta tai annettu lisätietoja.'
+                                                            }
                                                         </Typography>
                                                     </Collapse>
 

@@ -25,6 +25,16 @@ export default function handler(req, res) {
     return res.status(400).json({ data: "Missing task title" });
   }
 
+  var description = "";
+
+  if (body.budget) {
+    description += "Budjetti " + body.budget + "€";
+  }
+
+  if (body.description) {
+    description += "\n\n" + body.description;
+  }
+
   fetch(
     `https://api.clickup.com/api/v2/list/${body.pid}/task?custom_task_ids=true&team_id=${process.env.CLICKUP_TEAM_ID}`,
     {
@@ -35,9 +45,9 @@ export default function handler(req, res) {
       },
       body: JSON.stringify({
         "name": body.title,
-        "description": "Budjetti " + body.budget + "€",
+        "description": description,
         "priority": body.priority,
-        "due_date": body.deadline,
+        "due_date": body.deadline ? body.deadline : null,
         "due_date_time": true,
         "notify_all": true,
         "parent": null,

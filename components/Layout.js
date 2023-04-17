@@ -1,6 +1,7 @@
 import * as React from "react";
 import Head from "next/head";
 import Link from "next/link";
+import { useRouter } from 'next/router'
 
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -12,6 +13,8 @@ import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Fab from "@mui/material/Fab";
+import Tooltip from '@mui/material/Tooltip';
+import IconButton from '@mui/material/IconButton';
 
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
@@ -23,6 +26,7 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 
 import AddIcon from "@mui/icons-material/Add";
+import AutorenewIcon from '@mui/icons-material/Autorenew';
 
 const style = {
   position: "absolute",
@@ -40,9 +44,11 @@ const style = {
 
 export default function Layout({ title, description, projekti, children }) {
   var api_url = "";
+  const router = useRouter()
   const [open, setOpen] = React.useState(false);
   const [priority, setPriority] = React.useState(3);
   const [deadline, setDeadline] = React.useState(false);
+  const [reloading, setReloading] = React.useState(false);
 
   const changePriority = (event) => {
     setPriority(event.target.value);
@@ -56,6 +62,11 @@ export default function Layout({ title, description, projekti, children }) {
     setOpen(false);
   };
 
+  const handleReload = () => {
+    setReloading(true);
+    router.reload(window.location.pathname);
+  }
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -65,9 +76,8 @@ export default function Layout({ title, description, projekti, children }) {
       priority: e.target.priority.value,
       deadline: deadline,
       budget: e.target.budget.value,
+      description: e.target.description.value
     }
-
-    console.log(lomake);
 
     if (process.env.NODE_ENV === 'development') {
       api_url = `/api/new_task`;
@@ -83,6 +93,9 @@ export default function Layout({ title, description, projekti, children }) {
       body: JSON.stringify(lomake),
     });
 
+    console.log(response)
+
+    setOpen(false);
   };
 
   return (
@@ -95,7 +108,7 @@ export default function Layout({ title, description, projekti, children }) {
         <meta property="og:type" content="website" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="robots" content="noindex" />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/favicon.png" />
       </Head>
       <Box sx={{ flexGrow: 1 }}>
         <AppBar position="fixed" component="header">
@@ -109,6 +122,21 @@ export default function Layout({ title, description, projekti, children }) {
                 {title}
               </Typography>
             </Box>
+            <Tooltip title="Päivitä tehtävät">
+              <IconButton onClick={() => handleReload()} color="white">
+                <AutorenewIcon sx={{
+                  animation: reloading ? "spin 2s linear infinite" : "none",
+                  "@keyframes spin": {
+                    "0%": {
+                      transform: "rotate(0deg)",
+                    },
+                    "100%": {
+                      transform: "rotate(360deg)",
+                    },
+                  },
+                }} />
+              </IconButton>
+            </Tooltip>
           </Toolbar>
         </AppBar>
       </Box>
@@ -118,14 +146,16 @@ export default function Layout({ title, description, projekti, children }) {
       >
         {children}
         {projekti &&
+        <Tooltip title="Lähetä uusi tehtävä">
           <Fab
             color="primary"
             aria-label="add"
-            sx={{ position: "absolute", right: 48, bottom: 48 }}
+            sx={{ position: "absolute", right: 36, bottom: 36 }}
             onClick={handleOpen}
           >
             <AddIcon />
           </Fab>
+        </Tooltip>
         }
       </Box>
       <Box component="footer">
@@ -215,6 +245,17 @@ export default function Layout({ title, description, projekti, children }) {
                   pattern: "[0-9.]+",
                 }}
                 endAdornment={<InputAdornment position="end">€</InputAdornment>}
+              />
+            </FormControl>
+
+            <FormControl fullWidth sx={{ mb: 3 }}>
+              <TextField
+                id="description"
+                label="Tehtävän kuvaus"
+                name="description"
+                defaultValue=""
+                multiline={true}
+                minRows={4}
               />
             </FormControl>
 
