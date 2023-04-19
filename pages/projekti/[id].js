@@ -89,117 +89,119 @@ export default function Projekti({ projekti, taskit, id }) {
                             <Stack spacing={2}>
                                 {status.tasks.map((task, j) => (
                                     <Badge badgeContent={ (task.priority && task.priority.id != 3) ? '!' : ' ' } sx={{ "& .MuiBadge-badge": { backgroundColor: task.priority ? prio_varit[task.priority.id] : 'transparent', color: '#FFF', fontWeight: 900 } }} key={j}>
-                                        <Card sx={{ width: '100%' }} onClick={() => toggleDescription(task.id)}>
-                                            <CardActionArea>
-                                                <CardContent>
+                                        <Tooltip title="Näytä tehtävän lisätiedot klikkaamalla" placement="left">
+                                            <Card sx={{ width: '100%' }} onClick={() => toggleDescription(task.id)}>
+                                                <CardActionArea>
+                                                    <CardContent>
 
-                                                    <Typography gutterBottom variant="h6" component="div" align="center" sx={{ fontWeight: 500, p: 2 }}>{task.name}</Typography>
+                                                        <Typography gutterBottom variant="h6" component="div" align="center" sx={{ fontWeight: 500, p: 2 }}>{task.name}</Typography>
 
-                                                    
-                                                    <Collapse in={expanded === task.id}>
-                                                        <Typography component="div" sx={{ fontSize: 16, px: 2}}>
-                                                            {task.description 
-                                                                ? <div dangerouslySetInnerHTML={{__html: task.description.replace(/(?:\r\n|\r|\n)/g, '<br>')}} /> 
-                                                                : 'Tälle tehtävälle ei ole kirjoitettu kuvausta tai annettu lisätietoja.'
-                                                            }
-                                                        </Typography>
-
-                                                        {(task.priority && task.priority.id != 3) &&
-                                                            <Typography sx={{ fontSize: 16, p: 2, display: "flex", alignItems: "center" }}>
-                                                                <PriorityHighIcon />
-                                                                <Typography component="span" sx={{ fontWeight: 700, pr: 1 }}>Prioriteetti:</Typography>
-                                                                {prioriteetit[task.priority.id]}
-                                                            </Typography>
-                                                        }
-                                                    </Collapse>
-
-                                                    {(task.checklists && false) &&
-                                                        <Box>
-                                                            {task.checklists.map((checklist, k) => (
-                                                                <Box key={k}>
-                                                                    <Typography>{checklist.name} ({checklist.resolved}/{checklist.resolved + checklist.unresolved})</Typography>
-                                                                    <List>
-                                                                        {checklist.items.map((item, l) => (
-                                                                            <ListItem key={l} sx={{ padding: 0 }}>
-                                                                                <ListItemButton dense disabled={item.resolved}>
-                                                                                    <ListItemIcon>
-                                                                                        <Checkbox
-                                                                                            edge="start"
-                                                                                            checked={item.resolved}
-                                                                                            tabIndex={-1}
-                                                                                            disableRipple
-                                                                                        />
-                                                                                    </ListItemIcon>
-                                                                                    <ListItemText primary={item.name} />
-                                                                                </ListItemButton>
-                                                                            </ListItem>
-                                                                        ))}
-                                                                    </List>
-                                                                </Box>
-                                                            ))}
-                                                            
-                                                        </Box>
-                                                    }
-
-                                                </CardContent>
-
-                                                <CardActions disableSpacing>
-                                                
-                                                    <Stack direction="row" spacing={2} sx={{ justifyContent: 'center', width: '100%' }}>
                                                         
-                                                        {(!task.due_date && task.status.type != 'closed') &&
-                                                            <Tooltip title="Tehtävä lisätty">
-                                                                <Box sx={{ display: 'flex', alignItems: 'center', color: '#AAA' }}>
-                                                                    <EditCalendarIcon fontSize="small" sx={{ color: '#AAA', mr: 0.66 }} /> 
-                                                                    <Moment format="D.M.YYYY HH:mm" unix>{task.date_created / 1000}</Moment>
-                                                                </Box>
-                                                            </Tooltip>
+                                                        <Collapse in={expanded === task.id}>
+                                                            <Typography component="div" sx={{ fontSize: 16, px: 2}}>
+                                                                {task.description 
+                                                                    ? <div dangerouslySetInnerHTML={{__html: task.description.replace(/(?:\r\n|\r|\n)/g, '<br>')}} /> 
+                                                                    : 'Tälle tehtävälle ei ole kirjoitettu kuvausta tai annettu lisätietoja.'
+                                                                }
+                                                            </Typography>
+
+                                                            {(task.priority && task.priority.id != 3) &&
+                                                                <Typography sx={{ fontSize: 16, p: 2, display: "flex", alignItems: "center" }}>
+                                                                    <PriorityHighIcon />
+                                                                    <Typography component="span" sx={{ fontWeight: 700, pr: 1 }}>Prioriteetti:</Typography>
+                                                                    {prioriteetit[task.priority.id]}
+                                                                </Typography>
+                                                            }
+                                                        </Collapse>
+
+                                                        {(task.checklists && false) &&
+                                                            <Box>
+                                                                {task.checklists.map((checklist, k) => (
+                                                                    <Box key={k}>
+                                                                        <Typography>{checklist.name} ({checklist.resolved}/{checklist.resolved + checklist.unresolved})</Typography>
+                                                                        <List>
+                                                                            {checklist.items.map((item, l) => (
+                                                                                <ListItem key={l} sx={{ padding: 0 }}>
+                                                                                    <ListItemButton dense disabled={item.resolved}>
+                                                                                        <ListItemIcon>
+                                                                                            <Checkbox
+                                                                                                edge="start"
+                                                                                                checked={item.resolved}
+                                                                                                tabIndex={-1}
+                                                                                                disableRipple
+                                                                                            />
+                                                                                        </ListItemIcon>
+                                                                                        <ListItemText primary={item.name} />
+                                                                                    </ListItemButton>
+                                                                                </ListItem>
+                                                                            ))}
+                                                                        </List>
+                                                                    </Box>
+                                                                ))}
+                                                                
+                                                            </Box>
                                                         }
 
-                                                        {(task.due_date && task.status.type != 'closed') &&
-                                                            <Tooltip title="Tehtävän deadline">
-                                                                <Box sx={{ display: 'flex', alignItems: 'center', color: '#AAA' }}>
-                                                                    <CalendarMonthIcon fontSize="small" sx={{ color: '#AAA', mr: 0.66 }} />
-                                                                    <Moment format="D.M.YYYY HH:mm" unix>{task.due_date / 1000}</Moment>
-                                                                </Box>
-                                                            </Tooltip>
-                                                        }
+                                                    </CardContent>
 
-                                                        {task.date_closed &&
-                                                            <Tooltip title="Tehtävä valmistui">
-                                                                <Box sx={{ display: 'flex', alignItems: 'center', color: '#AAA' }}>
-                                                                    <EventAvailableIcon fontSize="small" sx={{ color: '#AAA', mr: 0.66 }} />
-                                                                    <Moment format="D.M.YYYY HH:mm" unix>{task.date_closed / 1000}</Moment>
-                                                                </Box>
-                                                            </Tooltip>
-                                                        }
-
-                                                        {task.time_estimate &&
-                                                            <Tooltip title={"Työaika-arvio " + msFormatter(task.time_estimate)}>
-                                                                <Box sx={{ display: 'flex', alignItems: 'center', color: '#AAA', letterSpacing: 2  }}>
-                                                                    <HistoryToggleOffIcon fontSize="small" sx={{ color: '#AAA', mr: 0.66 }} />
-                                                                    {msFormatter(task.time_estimate)}
-                                                                </Box>
-                                                            </Tooltip>
-                                                        }   
-
-                                                        {task.time_spent &&
-                                                            <Tooltip title={"Käytetty työaika " + msFormatter(task.time_spent)}>
-                                                                <Box sx={{ display: 'flex', alignItems: 'center', color: '#AAA', letterSpacing: 2  }}>
-                                                                    <TimerIcon fontSize="small" sx={{ color: '#AAA', mr: 0.66 }} />
-                                                                    {msFormatter(task.time_spent)}
-                                                                </Box>
-                                                            </Tooltip>
-                                                        }
-
-                                                    </Stack>
+                                                    <CardActions disableSpacing>
                                                     
-                                                </CardActions>
+                                                        <Stack direction="row" spacing={2} sx={{ justifyContent: 'center', width: '100%' }}>
+                                                            
+                                                            {(!task.due_date && task.status.type != 'closed') &&
+                                                                <Tooltip title="Tehtävä lisätty">
+                                                                    <Box sx={{ display: 'flex', alignItems: 'center', color: '#AAA' }}>
+                                                                        <EditCalendarIcon fontSize="small" sx={{ color: '#AAA', mr: 0.66 }} /> 
+                                                                        <Moment format="D.M.YYYY HH:mm" unix>{task.date_created / 1000}</Moment>
+                                                                    </Box>
+                                                                </Tooltip>
+                                                            }
 
-                                            
-                                            </CardActionArea>
+                                                            {(task.due_date && task.status.type != 'closed') &&
+                                                                <Tooltip title="Tehtävän deadline">
+                                                                    <Box sx={{ display: 'flex', alignItems: 'center', color: '#AAA' }}>
+                                                                        <CalendarMonthIcon fontSize="small" sx={{ color: '#AAA', mr: 0.66 }} />
+                                                                        <Moment format="D.M.YYYY HH:mm" unix>{task.due_date / 1000}</Moment>
+                                                                    </Box>
+                                                                </Tooltip>
+                                                            }
 
-                                        </Card>
+                                                            {task.date_closed &&
+                                                                <Tooltip title="Tehtävä valmistui">
+                                                                    <Box sx={{ display: 'flex', alignItems: 'center', color: '#AAA' }}>
+                                                                        <EventAvailableIcon fontSize="small" sx={{ color: '#AAA', mr: 0.66 }} />
+                                                                        <Moment format="D.M.YYYY HH:mm" unix>{task.date_closed / 1000}</Moment>
+                                                                    </Box>
+                                                                </Tooltip>
+                                                            }
+
+                                                            {task.time_estimate &&
+                                                                <Tooltip title={"Työaika-arvio " + msFormatter(task.time_estimate)}>
+                                                                    <Box sx={{ display: 'flex', alignItems: 'center', color: '#AAA', letterSpacing: 2  }}>
+                                                                        <HistoryToggleOffIcon fontSize="small" sx={{ color: '#AAA', mr: 0.66 }} />
+                                                                        {msFormatter(task.time_estimate)}
+                                                                    </Box>
+                                                                </Tooltip>
+                                                            }   
+
+                                                            {task.time_spent &&
+                                                                <Tooltip title={"Käytetty työaika " + msFormatter(task.time_spent)}>
+                                                                    <Box sx={{ display: 'flex', alignItems: 'center', color: '#AAA', letterSpacing: 2  }}>
+                                                                        <TimerIcon fontSize="small" sx={{ color: '#AAA', mr: 0.66 }} />
+                                                                        {msFormatter(task.time_spent)}
+                                                                    </Box>
+                                                                </Tooltip>
+                                                            }
+
+                                                        </Stack>
+                                                        
+                                                    </CardActions>
+
+                                                
+                                                </CardActionArea>
+
+                                            </Card>
+                                        </Tooltip>
                                     </Badge>
                                 ))}
                             </Stack>
