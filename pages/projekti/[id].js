@@ -31,9 +31,11 @@ import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import HistoryToggleOffIcon from '@mui/icons-material/HistoryToggleOff';
 import TimerIcon from '@mui/icons-material/Timer';
+import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
 
 export default function Projekti({ projekti, taskit, id }) {
     const prio_varit = ['', '#d50000', '#ffa000', 'transparent', '#a5d6a7'];
+    const prioriteetit = ['', 'Kriittinen', 'Kiireellinen', 'Normaali', 'Kiireetön'];
 
     const [expanded, setExpanded] = React.useState(false);
 
@@ -42,14 +44,8 @@ export default function Projekti({ projekti, taskit, id }) {
     };
 
     function msFormatter(ms) {
-        let seconds = (ms / 1000).toFixed(1);
-        let minutes = (ms / (1000 * 60)).toFixed(0);
-        let hours = (ms / (1000 * 60 * 60)).toFixed(0);
-        let days = (ms / (1000 * 60 * 60 * 24)).toFixed(0);
-        if (seconds < 60) return seconds + " sek";
-        else if (minutes < 60) return minutes + " min";
-        else if (hours < 24) return hours + " tuntia";
-        else return days + " päivää";
+        let hours = String(Math.ceil((ms / (1000 * 60 * 60)) * 4) / 4).replace('0','').replace('.25', '¼').replace('.5', '½').replace('.75', '¾');
+        return hours + "h";
     }
 
     return (
@@ -57,7 +53,7 @@ export default function Projekti({ projekti, taskit, id }) {
             <Grid container spacing={2} sx={{ maxWidth: 1500, mx: 'auto', p: 4 }}>
                 {taskit?.map((status, i) => (  
                     <Grid item xs={6} md={4} key={i}>
-                        <Box key={i} sx={{ maxWidth: 500, p: 4 }}>
+                        <Box sx={{ maxWidth: 500, p: 4 }}>
                             
                             <Box sx={{ display: 'flex', alignItems: 'center', fontWeight: 700, textTransform: "capitalize", mb: 2 }}>
                                 
@@ -69,19 +65,19 @@ export default function Projekti({ projekti, taskit, id }) {
                                 <Stack direction="row" spacing={2}>
 
                                     {status.time_estimate &&
-                                        <Tooltip title="Arvioitu työaika yhteensä">
+                                        <Tooltip title={"Arvioitu työaika yhteensä " + msFormatter(status.time_estimate)}>
                                             <Box sx={{ display: 'flex', alignItems: 'center', color: '#777' }}>
                                                 <HistoryToggleOffIcon fontSize="small" sx={{ color: '#777', mr: 0.66 }} /> 
-                                                <Typography sx={{ fontWeight: 700, textTransform: 'none' }}>{msFormatter(status.time_estimate)}</Typography>
+                                                <Typography sx={{ fontWeight: 700, textTransform: 'none', letterSpacing: 2 }}>{msFormatter(status.time_estimate)}</Typography>
                                             </Box>
                                         </Tooltip>
                                     }
 
                                     {status.time_spent &&
-                                        <Tooltip title="Toteutunut työaika yhteensä">
+                                        <Tooltip title={"Toteutunut työaika yhteensä " + msFormatter(status.time_spent)}>
                                             <Box sx={{ display: 'flex', alignItems: 'center', color: '#777' }}>
                                                 <TimerIcon fontSize="small" sx={{ color: '#777', mr: 0.66 }} /> 
-                                                <Typography sx={{ fontWeight: 700, textTransform: 'none' }}>{msFormatter(status.time_spent)}</Typography>
+                                                <Typography sx={{ fontWeight: 700, textTransform: 'none', letterSpacing: 2  }}>{msFormatter(status.time_spent)}</Typography>
                                             </Box>
                                         </Tooltip>
                                     }
@@ -107,6 +103,14 @@ export default function Projekti({ projekti, taskit, id }) {
                                                                 : 'Tälle tehtävälle ei ole kirjoitettu kuvausta tai annettu lisätietoja.'
                                                             }
                                                         </Typography>
+
+                                                        {(task.priority && task.priority.id != 3) &&
+                                                            <Typography sx={{ fontSize: 16, p: 2, display: "flex", alignItems: "center" }}>
+                                                                <PriorityHighIcon />
+                                                                <Typography component="span" sx={{ fontWeight: 700, pr: 1 }}>Prioriteetti:</Typography>
+                                                                {prioriteetit[task.priority.id]}
+                                                            </Typography>
+                                                        }
                                                     </Collapse>
 
                                                     {(task.checklists && false) &&
@@ -171,8 +175,8 @@ export default function Projekti({ projekti, taskit, id }) {
                                                         }
 
                                                         {task.time_estimate &&
-                                                            <Tooltip title="Työaika-arvio">
-                                                                <Box sx={{ display: 'flex', alignItems: 'center', color: '#AAA' }}>
+                                                            <Tooltip title={"Työaika-arvio " + msFormatter(task.time_estimate)}>
+                                                                <Box sx={{ display: 'flex', alignItems: 'center', color: '#AAA', letterSpacing: 2  }}>
                                                                     <HistoryToggleOffIcon fontSize="small" sx={{ color: '#AAA', mr: 0.66 }} />
                                                                     {msFormatter(task.time_estimate)}
                                                                 </Box>
@@ -180,8 +184,8 @@ export default function Projekti({ projekti, taskit, id }) {
                                                         }   
 
                                                         {task.time_spent &&
-                                                            <Tooltip title="Käytetty työaika">
-                                                                <Box sx={{ display: 'flex', alignItems: 'center', color: '#AAA' }}>
+                                                            <Tooltip title={"Käytetty työaika " + msFormatter(task.time_spent)}>
+                                                                <Box sx={{ display: 'flex', alignItems: 'center', color: '#AAA', letterSpacing: 2  }}>
                                                                     <TimerIcon fontSize="small" sx={{ color: '#AAA', mr: 0.66 }} />
                                                                     {msFormatter(task.time_spent)}
                                                                 </Box>
