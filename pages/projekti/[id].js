@@ -50,15 +50,15 @@ export default function Projekti({ projekti, taskit, id }) {
 
     return (
         <Layout title={`${projekti.name} - ${projekti.space.name}`} description="Kuvaus" projekti={id}>
-            <Grid container spacing={{xs: 0, md: 2}} sx={{ maxWidth: 1500, mx: 'auto', p: {xs: 1, md: 2, lg: 4 } }}>
+            <Grid container spacing={{xs: 0, md: 2}} sx={{ mx: 'auto', p: {xs: 1, md: 2, lg: 4 } }}>
                 {taskit?.map((status, i) => (  
-                    <Grid item xs={12} md={6} xl={4} key={i}>
-                        <Box sx={{ maxWidth: 500, p: {xs: 1, md: 2, lg: 4 }, mb: 4 }}>
+                    <Grid item key={i} sx={{ maxWidth: 440, width: '100%' }}>
+                        <Box sx={{ maxWidth: 440, p: {xs: 1, md: 2, lg: 4 }, mb: 4 }}>
                             
                             <Box sx={{ display: 'flex', alignItems: 'center', fontWeight: 700, textTransform: "capitalize", mb: 2 }}>
                                 
                                 <Box sx= {{ height: '18px', width: '18px', borderRadius: '4px', mr: '8px', display: 'inline-block', backgroundColor: status.color }} />
-                                {status.name + ' (' + status.tasks.length + ')'}
+                                {status.tasks ? status.name + ' (' + status.tasks.length + ')' : status.name + ' (0)'}
                                 
                                 <Box sx={{ flexGrow: 1 }} />
 
@@ -87,9 +87,9 @@ export default function Projekti({ projekti, taskit, id }) {
                             </Box>
                             
                             <Stack spacing={{xs: 0, md: 2}}>
-                                {status.tasks.map((task, j) => (
+                                {status.tasks ? status.tasks.map((task, j) => (
                                     <Badge badgeContent={ (task.priority && task.priority.id != 3) ? '!' : ' ' } sx={{ "& .MuiBadge-badge": { backgroundColor: task.priority ? prio_varit[task.priority.id] : 'transparent', color: '#FFF', fontWeight: 900 } }} key={j}>
-                                            <Card sx={{ width: '100%' }} onClick={() => toggleDescription(task.id)}>
+                                            <Card sx={{ width: '100%', mb: 2 }} onClick={() => toggleDescription(task.id)}>
                                                 <CardActionArea>
                                                     <CardContent>
 
@@ -201,7 +201,7 @@ export default function Projekti({ projekti, taskit, id }) {
 
                                             </Card>
                                     </Badge>
-                                ))}
+                                )) : ''}
                             </Stack>
                         </Box>
                     </Grid>
@@ -241,25 +241,35 @@ export async function getServerSideProps(ctx) {
             }
         );
         const tasks = await tasks_res.json();
-
-        var time_estimate = tasks.tasks.map(task => task.time_estimate).reduce((acc, amount) => acc + amount);
-        var time_spent = tasks.tasks.map(task => task.time_spent).reduce((acc, amount) => acc + amount);
         
-        if ( typeof time_estimate == 'undefined' || isNaN(time_estimate) || time_estimate == 0 ) {
-            time_estimate = false;
-        }
-        
-        if ( typeof time_spent == 'undefined' || isNaN(time_spent) || time_spent == 0 ) {
-            time_spent = false;
-        }
+        if (tasks.hasOwnProperty("tasks") && tasks.tasks.length > 0) {
+            var time_estimate = tasks.tasks.map(task => task.time_estimate).reduce((acc, amount) => acc + amount);
+            var time_spent = tasks.tasks.map(task => task.time_spent).reduce((acc, amount) => acc + amount);
+            
+            if ( typeof time_estimate == 'undefined' || isNaN(time_estimate) || time_estimate == 0 ) {
+                time_estimate = false;
+            }
+            
+            if ( typeof time_spent == 'undefined' || isNaN(time_spent) || time_spent == 0 ) {
+                time_spent = false;
+            }
 
-        taskit[i] = {
-            "name": projekti.statuses[i].status, 
-            "color": projekti.statuses[i].color, 
-            "tasks": tasks.tasks, 
-            "time_estimate": time_estimate,
-            "time_spent": time_spent
-        };
+            taskit[i] = {
+                "name": projekti.statuses[i].status, 
+                "color": projekti.statuses[i].color, 
+                "tasks": tasks.tasks, 
+                "time_estimate": time_estimate,
+                "time_spent": time_spent
+            };
+        } else {
+            taskit[i] = {
+                "name": projekti.statuses[i].status, 
+                "color": projekti.statuses[i].color, 
+                "tasks": false, 
+                "time_estimate": false,
+                "time_spent": false
+            };
+        }
     }
 
     return { props: { projekti, taskit, id } };
