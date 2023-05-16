@@ -50,10 +50,10 @@ export default function Projekti({ projekti, taskit, id }) {
 
     return (
         <Layout title={`${projekti.name} - ${projekti.space.name}`} description="Kuvaus" projekti={id}>
-            <Grid container spacing={2} sx={{ maxWidth: 1500, mx: 'auto', p: 4 }}>
+            <Grid container spacing={{xs: 0, md: 2}} sx={{ maxWidth: 1500, mx: 'auto', p: {xs: 1, md: 2, lg: 4 } }}>
                 {taskit?.map((status, i) => (  
-                    <Grid item xs={6} md={4} key={i}>
-                        <Box sx={{ maxWidth: 500, p: 4 }}>
+                    <Grid item xs={12} md={6} xl={4} key={i}>
+                        <Box sx={{ maxWidth: 500, p: {xs: 1, md: 2, lg: 4 }, mb: 4 }}>
                             
                             <Box sx={{ display: 'flex', alignItems: 'center', fontWeight: 700, textTransform: "capitalize", mb: 2 }}>
                                 
@@ -65,7 +65,7 @@ export default function Projekti({ projekti, taskit, id }) {
                                 <Stack direction="row" spacing={2}>
 
                                     {status.time_estimate &&
-                                        <Tooltip title={"Arvioitu työaika yhteensä " + msFormatter(status.time_estimate)}>
+                                        <Tooltip title={"Arvioitu työaika yhteensä " + msFormatter(status.time_estimate)} arrow="true">
                                             <Box sx={{ display: 'flex', alignItems: 'center', color: '#777' }}>
                                                 <HistoryToggleOffIcon fontSize="small" sx={{ color: '#777', mr: 0.66 }} /> 
                                                 <Typography sx={{ fontWeight: 700, textTransform: 'none', letterSpacing: 2 }}>{msFormatter(status.time_estimate)}</Typography>
@@ -74,7 +74,7 @@ export default function Projekti({ projekti, taskit, id }) {
                                     }
 
                                     {status.time_spent &&
-                                        <Tooltip title={"Toteutunut työaika yhteensä " + msFormatter(status.time_spent)}>
+                                        <Tooltip title={"Toteutunut työaika yhteensä " + msFormatter(status.time_spent)} arrow="true">
                                             <Box sx={{ display: 'flex', alignItems: 'center', color: '#777' }}>
                                                 <TimerIcon fontSize="small" sx={{ color: '#777', mr: 0.66 }} /> 
                                                 <Typography sx={{ fontWeight: 700, textTransform: 'none', letterSpacing: 2  }}>{msFormatter(status.time_spent)}</Typography>
@@ -86,10 +86,9 @@ export default function Projekti({ projekti, taskit, id }) {
 
                             </Box>
                             
-                            <Stack spacing={2}>
+                            <Stack spacing={{xs: 0, md: 2}}>
                                 {status.tasks.map((task, j) => (
                                     <Badge badgeContent={ (task.priority && task.priority.id != 3) ? '!' : ' ' } sx={{ "& .MuiBadge-badge": { backgroundColor: task.priority ? prio_varit[task.priority.id] : 'transparent', color: '#FFF', fontWeight: 900 } }} key={j}>
-                                        <Tooltip title="Näytä tehtävän lisätiedot klikkaamalla" placement="left">
                                             <Card sx={{ width: '100%' }} onClick={() => toggleDescription(task.id)}>
                                                 <CardActionArea>
                                                     <CardContent>
@@ -149,7 +148,7 @@ export default function Projekti({ projekti, taskit, id }) {
                                                         <Stack direction="row" spacing={2} sx={{ justifyContent: 'center', width: '100%' }}>
                                                             
                                                             {(!task.due_date && task.status.type != 'closed') &&
-                                                                <Tooltip title="Tehtävä lisätty">
+                                                                <Tooltip title="Tehtävä lisätty" arrow="true">
                                                                     <Box sx={{ display: 'flex', alignItems: 'center', color: '#AAA' }}>
                                                                         <EditCalendarIcon fontSize="small" sx={{ color: '#AAA', mr: 0.66 }} /> 
                                                                         <Moment format="D.M.YYYY HH:mm" unix>{task.date_created / 1000}</Moment>
@@ -158,7 +157,7 @@ export default function Projekti({ projekti, taskit, id }) {
                                                             }
 
                                                             {(task.due_date && task.status.type != 'closed') &&
-                                                                <Tooltip title="Tehtävän deadline">
+                                                                <Tooltip title="Tehtävän deadline" arrow="true">
                                                                     <Box sx={{ display: 'flex', alignItems: 'center', color: '#AAA' }}>
                                                                         <CalendarMonthIcon fontSize="small" sx={{ color: '#AAA', mr: 0.66 }} />
                                                                         <Moment format="D.M.YYYY HH:mm" unix>{task.due_date / 1000}</Moment>
@@ -167,7 +166,7 @@ export default function Projekti({ projekti, taskit, id }) {
                                                             }
 
                                                             {task.date_closed &&
-                                                                <Tooltip title="Tehtävä valmistui">
+                                                                <Tooltip title="Tehtävä valmistui" arrow="true">
                                                                     <Box sx={{ display: 'flex', alignItems: 'center', color: '#AAA' }}>
                                                                         <EventAvailableIcon fontSize="small" sx={{ color: '#AAA', mr: 0.66 }} />
                                                                         <Moment format="D.M.YYYY HH:mm" unix>{task.date_closed / 1000}</Moment>
@@ -176,7 +175,7 @@ export default function Projekti({ projekti, taskit, id }) {
                                                             }
 
                                                             {task.time_estimate &&
-                                                                <Tooltip title={"Työaika-arvio " + msFormatter(task.time_estimate)}>
+                                                                <Tooltip title={"Työaika-arvio " + msFormatter(task.time_estimate)} arrow="true">
                                                                     <Box sx={{ display: 'flex', alignItems: 'center', color: '#AAA', letterSpacing: 2  }}>
                                                                         <HistoryToggleOffIcon fontSize="small" sx={{ color: '#AAA', mr: 0.66 }} />
                                                                         {msFormatter(task.time_estimate)}
@@ -185,7 +184,7 @@ export default function Projekti({ projekti, taskit, id }) {
                                                             }   
 
                                                             {task.time_spent &&
-                                                                <Tooltip title={"Käytetty työaika " + msFormatter(task.time_spent)}>
+                                                                <Tooltip title={"Käytetty työaika " + msFormatter(task.time_spent)} arrow="true">
                                                                     <Box sx={{ display: 'flex', alignItems: 'center', color: '#AAA', letterSpacing: 2  }}>
                                                                         <TimerIcon fontSize="small" sx={{ color: '#AAA', mr: 0.66 }} />
                                                                         {msFormatter(task.time_spent)}
@@ -201,7 +200,6 @@ export default function Projekti({ projekti, taskit, id }) {
                                                 </CardActionArea>
 
                                             </Card>
-                                        </Tooltip>
                                     </Badge>
                                 ))}
                             </Stack>

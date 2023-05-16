@@ -29,10 +29,18 @@ export default function handler(req, res) {
 
   if (body.budget) {
     description += "Budjetti " + body.budget + "€";
+
+    if (body.description) {
+      description += "\n\n";
+    }
   }
 
   if (body.description) {
-    description += "\n\n" + body.description;
+    description += body.description;
+  }
+
+  if (body.cando == 1) {
+    description += "\n\n Tehtävän saa tehdä suoraan ilman työarvion erillistä hyväksyttämistä.";
   }
 
   fetch(
