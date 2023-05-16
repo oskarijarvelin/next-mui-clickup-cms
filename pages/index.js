@@ -15,7 +15,7 @@ const style = {
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
-    width: 800,
+    width: 500,
     maxWidth: '95vw',
     bgcolor: "background.paper",
     borderRadius: '5px',
@@ -23,6 +23,7 @@ const style = {
     pt: 3,
     px: 6,
     pb: 6,
+    mx: 'auto'
 };
 
 export default function Index() {
@@ -44,7 +45,7 @@ export default function Index() {
       description="Kuvaus"
       projekti={false}
     >
-      <Box sx={{ ...style, width: 500, mx: 1 }}>
+      <Box sx={{ ...style }}>
         <Typography
           variant="h5"
           sx={{ my: 4, fontWeight: 500 }}
