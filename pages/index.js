@@ -43,7 +43,7 @@ export default function Index() {
       description="Kuvaus"
       projekti={false}
     >
-      <Box sx={{ ...style, width: 500 }}>
+      <Box sx={{ ...style, width: 500, mx: 1 }}>
         <Typography
           variant="h5"
           sx={{ my: 4, fontWeight: 500 }}

@@ -192,7 +192,7 @@ export default function Layout({ title, description, projekti, children }) {
           aria-describedby="modal-description"
           keepMounted
         >
-          <Box sx={{ ...style, width: 500 }}>
+          <Box sx={{ ...style, width: 500, mx: 1 }}>
             <Typography
               variant="h4"
               id="modal-title"
