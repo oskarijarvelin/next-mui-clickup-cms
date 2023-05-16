@@ -168,7 +168,7 @@ export default function Layout({ title, description, projekti, children }) {
             <Fab
               color="primary"
               aria-label="add"
-              sx={{ position: "absolute", right: 36, bottom: 36 }}
+              sx={{ position: "fixed", right: 36, bottom: 36 }}
               onClick={handleOpen}
             >
               <AddIcon />
