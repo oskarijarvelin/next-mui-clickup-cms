@@ -15,6 +15,7 @@ import Typography from "@mui/material/Typography";
 import Fab from "@mui/material/Fab";
 import Tooltip from "@mui/material/Tooltip";
 import IconButton from "@mui/material/IconButton";
+import Stack from '@mui/material/Stack';
 
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
@@ -198,7 +199,7 @@ export default function Layout({ title, description, projekti, children }) {
             <Typography
               variant="h4"
               id="modal-title"
-              sx={{ my: 1, fontWeight: 500 }}
+              sx={{ my: 2, fontWeight: 500 }}
             >
               Lähetä uusi tehtävä
             </Typography>
@@ -207,7 +208,7 @@ export default function Layout({ title, description, projekti, children }) {
               Ethän lähetä tällä lomakkeella luottamuksellista tai
               salassapidettävää tietoa, kuten salasanoja.
               <br />
-              <br></br>
+              <br />
               Huomioithan, että et pysty muokkaamaan tai poistamaan tehtäviä
               itse enää lähettämisen jälkeen.
             </Typography>
@@ -372,9 +373,14 @@ export default function Layout({ title, description, projekti, children }) {
                 </FormGroup>
               </FormControl>
 
-              <Button variant="contained" type="submit" disabled={!consent}>
-                Lähetä
-              </Button>
+              <Stack spacing={2} direction="row" justifyContent="space-between">
+                <Button variant="contained" type="submit" disabled={!consent}>
+                  Lähetä
+                </Button>
+                <Button variant="outlined" onClick={handleClose}>
+                  Sulje
+                </Button>
+              </Stack>
             </form>
           </Box>
         </Modal>
