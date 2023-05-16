@@ -45,7 +45,8 @@ const style = {
   pt: 2,
   px: 4,
   pb: 3,
-  max: 'auto'
+  mx: 'auto',
+  my: 2
 };
 
 export default function Layout({ title, description, projekti, children }) {
