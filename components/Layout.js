@@ -46,7 +46,8 @@ const style = {
   px: 4,
   pb: 3,
   mx: 'auto',
-  my: 2
+  maxHeight: '98vh',
+  overflow: 'auto'
 };
 
 export default function Layout({ title, description, projekti, children }) {
